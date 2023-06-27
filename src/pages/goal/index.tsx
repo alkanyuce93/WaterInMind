@@ -7,14 +7,12 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AnimatedCircular, SaveButton } from "../../components";
-import { getGoals } from "../../services";
 import { updateGoal } from "../../services/goal";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Goal() {
-  const { data: dataGoal } = useQuery(["goal"], () => getGoals("1"));
   const queryClient = useQueryClient();
 
   const [defaultAmount, setDefaultAmount] = useState(false);
@@ -34,14 +32,14 @@ export default function Goal() {
     ]);
   };
 
-  const goalTargetPercentage = (value / 2000) * 100;
+  const goalTargetPercentage = value ? (value / 2000) * 100 : 0;
 
   const onRenderFill = () => {
     return (
       <View style={styles.fillContainer}>
-        <Text style={styles.fillText}>{goalTargetPercentage}%</Text>
+        <Text style={styles.fillText}>{goalTargetPercentage.toFixed(0)}%</Text>
         <TouchableOpacity onPress={() => setDefaultAmount(true)}>
-          <Text style={styles.fillSubText}>{value} / 2000 ml</Text>
+          <Text style={styles.fillSubText}>{value ? value : 0} / 2000 ml</Text>
         </TouchableOpacity>
       </View>
     );
@@ -53,8 +51,6 @@ export default function Goal() {
     }
     setValue(parseInt(text));
   };
-
-  console.log("dataIntake", dataGoal);
 
   const onSave = async () => {
     const data = {
@@ -94,10 +90,12 @@ export default function Goal() {
       />
       <View style={styles.descriptionContainer}>
         <Text style={styles.descriptionText}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit laborum
-          numquam eum exercitationem nobis. Ea, repellendus quod quisquam nulla,
-          soluta quas doloremque nesciunt, molestias illo consequatur quos
-          expedita! Quisquam, mollitia.
+          Drinking at least 2000 ml of water daily is vital for optimal health.
+          Water is crucial for regulating body temperature, lubricating joints,
+          aiding digestion, and transporting nutrients. It flushes out toxins,
+          enhances physical performance, prevents dehydration, supports
+          metabolism, and promotes healthy skin. Stay hydrated for a healthier
+          life!
         </Text>
       </View>
     </View>
