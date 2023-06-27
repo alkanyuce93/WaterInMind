@@ -1,8 +1,13 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import moment from "moment";
-import { FlatList } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "@gorhom/bottom-sheet";
+import {
+  RecyclerListView,
+  DataProvider,
+  LayoutProvider,
+} from "recyclerlistview";
 
 import { getGoals, getIntakes } from "../../services";
 import {
@@ -43,7 +48,6 @@ export default function Home() {
   const [selectedItem, setSelectedItem] = React.useState<UsersType | null>(
     null
   );
-  const [isUpdate, setIsUpdate] = React.useState(true);
   const navigation = useNavigation();
   const queryClient = useQueryClient();
 
@@ -132,7 +136,6 @@ export default function Home() {
     } as unknown as UsersType);
     refetch();
     setOpenCreateModal(false);
-    setIsUpdate(true);
   };
 
   const onLongPress = (id: string) => {
@@ -141,103 +144,130 @@ export default function Home() {
     setOpenModal(true);
   };
 
+  const dataProvider = new DataProvider((r1, r2) => r1 !== r2);
+  const layoutProvider = new LayoutProvider(
+    (index) => "itemType",
+    (type, dim) => {
+      switch (type) {
+        case "itemType":
+          dim.width = 400;
+          dim.height = 40;
+          break;
+        default:
+          dim.width = 380;
+          dim.height = 40;
+          break;
+      }
+    }
+  );
+
   return (
     <View>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Goal");
-        }}
-        style={{ alignItems: "flex-end", paddingTop: 48, paddingRight: 10 }}
-      >
-        <Image style={{ width: 36, height: 36 }} source={goalPageIcon} />
-      </TouchableOpacity>
-      <View style={{ alignItems: "center" }}>
-        <AnimatedCircular
-          actualIntake={actualIntake}
-          targetIntake={targetIntake}
-          onRenderFill={onRenderFill}
-          isUpdate={isUpdate}
-        />
-      </View>
-      <View
-        style={{
-          borderBottomColor: "black",
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          width: "85%",
-          alignSelf: "center",
-          marginTop: 10,
-        }}
-      />
-      <View
-        style={{
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "space-around",
-        }}
-      >
-        {renderSelectBox(TimeType.Daily, "Daily")}
-        {renderSelectBox(TimeType.Weekly, "Weekly")}
-        {renderSelectBox(TimeType.Monthly, "Monthly")}
-      </View>
-      <SaveButton
-        onPress={() => {
-          setOpenCreateModal(true);
-        }}
-      />
-      <View style={{ height: "30%", marginTop: 20 }}>
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={1}
-          snapPoints={snapPoints}
-          enableHandlePanningGesture={false}
-          containerHeight={100}
-          handleStyle={{
-            backgroundColor: "#D4D4D8",
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            height: 30,
-          }}
-        >
-          <FlatList
-            data={selectedDataFunction()}
-            renderItem={({ item }) =>
-              isLoading ? (
-                <Text>Loading...</Text>
-              ) : (
-                <ListInfoCard
-                  id={item.id}
-                  unit={item.unit}
-                  amount={item.amount.toString()}
-                  createdAt={item.createdAt.toString()}
-                  onLongPress={() => {
-                    onLongPress(item.id);
-                  }}
-                />
-              )
-            }
-            keyExtractor={(item) => item.id}
+      {isLoading ? (
+        <View style={{ alignItems: "center", marginTop: 100 }}>
+          <Text>Loading...</Text>
+        </View>
+      ) : (
+        <>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Goal");
+            }}
+            style={{ alignItems: "flex-end", paddingTop: 48, paddingRight: 10 }}
+          >
+            <Image style={{ width: 36, height: 36 }} source={goalPageIcon} />
+          </TouchableOpacity>
+          <View style={{ alignItems: "center" }}>
+            <AnimatedCircular
+              actualIntake={actualIntake}
+              targetIntake={targetIntake}
+              onRenderFill={onRenderFill}
+            />
+          </View>
+          <View
+            style={{
+              borderBottomColor: "black",
+              borderBottomWidth: StyleSheet.hairlineWidth,
+              width: "85%",
+              alignSelf: "center",
+              marginTop: 10,
+            }}
           />
-        </BottomSheet>
-      </View>
-      <UpdateModal
-        item={selectedItem}
-        isVisible={openModal}
-        onClose={() => setOpenModal(false)}
-        onSave={(text) => {
-          updateIntakeMutation({ ...selectedItem, amount: text });
-        }}
-        onDelete={() => {
-          deleteIntakeMutation(selectedItem?.id);
-          setOpenModal(false);
-        }}
-      />
-      <CreateModal
-        isVisible={openCreateModal}
-        onClose={() => setOpenCreateModal(false)}
-        onSave={(text) => {
-          createIntakeNew(text as unknown as Text);
-        }}
-      />
+          <View
+            style={{
+              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "space-around",
+            }}
+          >
+            {renderSelectBox(TimeType.Daily, "Daily")}
+            {renderSelectBox(TimeType.Weekly, "Weekly")}
+            {renderSelectBox(TimeType.Monthly, "Monthly")}
+          </View>
+          <SaveButton
+            onPress={() => {
+              setOpenCreateModal(true);
+            }}
+          />
+          <View style={{ height: "30%", marginTop: 20 }}>
+            <BottomSheet
+              ref={bottomSheetRef}
+              index={1}
+              snapPoints={snapPoints}
+              enableHandlePanningGesture={false}
+              containerHeight={100}
+              handleStyle={{
+                backgroundColor: "#D4D4D8",
+                borderTopRightRadius: 15,
+                borderTopLeftRadius: 15,
+                height: 30,
+              }}
+            >
+              <RecyclerListView
+                dataProvider={dataProvider.cloneWithRows(
+                  selectedDataFunction()
+                )}
+                layoutProvider={layoutProvider}
+                rowRenderer={(type, data) => {
+                  return (
+                    <ListInfoCard
+                      id={data.id}
+                      unit={data.unit}
+                      amount={data.amount.toString()}
+                      createdAt={data.createdAt.toString()}
+                      onLongPress={() => {
+                        onLongPress(data.id);
+                      }}
+                    />
+                  );
+                }}
+              />
+            </BottomSheet>
+          </View>
+          <UpdateModal
+            item={selectedItem}
+            isVisible={openModal}
+            onClose={() => setOpenModal(false)}
+            onSave={(text) => {
+              updateIntakeMutation({
+                ...selectedItem,
+                amount: text,
+              });
+            }}
+            onDelete={() => {
+              deleteIntakeMutation(selectedItem?.id);
+              setOpenModal(false);
+            }}
+          />
+          <CreateModal
+            isVisible={openCreateModal}
+            onClose={() => setOpenCreateModal(false)}
+            onSave={(text) => {
+              createIntakeNew(text as unknown as Text);
+            }}
+          />
+        </>
+      )}
     </View>
   );
 }
