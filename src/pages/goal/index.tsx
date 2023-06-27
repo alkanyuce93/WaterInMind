@@ -54,8 +54,6 @@ export default function Goal() {
     setValue(parseInt(text));
   };
 
-  console.log("dataIntake", dataGoal);
-
   const onSave = async () => {
     const data = {
       id: "1",
