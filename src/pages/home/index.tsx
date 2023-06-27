@@ -43,7 +43,7 @@ export default function Home() {
   const [selectedItem, setSelectedItem] = React.useState<UsersType | null>(
     null
   );
-  const [isUpdate, setIsUpdate] = React.useState(false);
+  const [isUpdate, setIsUpdate] = React.useState(true);
   const navigation = useNavigation();
   const queryClient = useQueryClient();
 
