@@ -57,10 +57,6 @@ export default function Home() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["100%", "100%"], []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
   const selectedButton = (type: TimeType) => {
     if (selectedTimeType === type) {
       setSelectedTimeType(null);
@@ -193,7 +189,6 @@ export default function Home() {
           ref={bottomSheetRef}
           index={1}
           snapPoints={snapPoints}
-          onChange={handleSheetChanges}
           enableHandlePanningGesture={false}
           containerHeight={100}
           handleStyle={{
@@ -229,8 +224,6 @@ export default function Home() {
         isVisible={openModal}
         onClose={() => setOpenModal(false)}
         onSave={(text) => {
-          console.log("text", text);
-
           updateIntakeMutation({ ...selectedItem, amount: text });
         }}
         onDelete={() => {
