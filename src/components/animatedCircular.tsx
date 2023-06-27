@@ -27,6 +27,12 @@ export const AnimatedCircular: React.FC<Props> = ({
     setFill(fillValue);
   }, [actualIntake, targetIntake, isUpdate]);
 
+  useEffect(() => {
+    if (!fill) {
+      setFill(0);
+    }
+  }, [fill]);
+
   return (
     <View>
       <AnimatedCircularProgress

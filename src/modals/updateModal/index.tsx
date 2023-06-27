@@ -29,11 +29,13 @@ export const UpdateModal: React.FC<Props> = ({
               <TextInput
                 keyboardType="numeric"
                 style={styles.input}
+                placeholder="... ml"
                 onChangeText={(text) => onSave(text)}
               />
+
               <View style={{ flexDirection: "row" }}>
                 <Button
-                  color={"blue"}
+                  color={"#0A6EBD"}
                   title="Save"
                   onPress={() => {
                     setIsUpdate(false);
@@ -41,7 +43,7 @@ export const UpdateModal: React.FC<Props> = ({
                   }}
                 />
                 <Button
-                  color={"red"}
+                  color={"#F24C3D"}
                   title="Cancel"
                   onPress={() => {
                     setIsUpdate(false);
@@ -60,7 +62,7 @@ export const UpdateModal: React.FC<Props> = ({
               />
               <Button color={"gray"} title="Delete" onPress={onDelete} />
               <Button
-                color={"red"}
+                color={"#F24C3D"}
                 title="Cancel"
                 onPress={() => {
                   onClose();
@@ -103,5 +105,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 4,
     marginBottom: 16,
+    fontSize: 20,
+    textAlign: "center",
   },
 });

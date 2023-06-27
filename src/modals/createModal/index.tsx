@@ -28,7 +28,7 @@ export const CreateModal: React.FC<Props> = ({
             />
             <View style={{ flexDirection: "row" }}>
               <Button
-                color={"blue"}
+                color={"#0A6EBD"}
                 title="Save"
                 onPress={() => {
                   onSave(text);
@@ -36,7 +36,7 @@ export const CreateModal: React.FC<Props> = ({
                 }}
               />
               <Button
-                color={"red"}
+                color={"#F24C3D"}
                 title="Cancel"
                 onPress={() => {
                   onClose();
