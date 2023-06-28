@@ -7,10 +7,10 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AnimatedCircular, SaveButton } from "../../components";
 import { updateGoal } from "../../services/goal";
-import { useNavigation } from "@react-navigation/native";
 
 export default function Goal() {
   const queryClient = useQueryClient();

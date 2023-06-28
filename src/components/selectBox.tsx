@@ -28,7 +28,7 @@ export const SelectBox: React.FC<Props> = ({ isSelected, label, onPress }) => {
           justifyContent: "center",
           backgroundColor: isSelected ? "#000" : "#fff",
         }}
-      ></View>
+      />
       <Text
         style={{
           color: "#000",
