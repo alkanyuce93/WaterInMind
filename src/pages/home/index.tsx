@@ -1,8 +1,9 @@
 import React, { useMemo, useRef } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import moment from "moment";
-import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   RecyclerListView,
   DataProvider,
@@ -17,15 +18,14 @@ import {
   SelectBox,
 } from "../../components";
 import { goalPageIcon } from "../../../assets";
-import { TimeType, IntakeType, GoalType } from "../../interface/enum";
+import { IntakeType, GoalType } from "../../interface/common";
+import { TimeType } from "../../interface/enum";
 import { CreateModal, UpdateModal } from "../../modals";
 import {
   createIntake,
   deleteIntake,
   updateIntake,
 } from "../../services/intake";
-import { useNavigation } from "@react-navigation/native";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
   const { data, isLoading, refetch } = useQuery(["intakes"], getIntakes);
@@ -108,11 +108,11 @@ export default function Home() {
 
   const targetIntake = (): number => {
     if (selectedTimeType === TimeType.Weekly) {
-      return dataGoalData.weeklyGoal;
+      return dataGoalData?.weeklyGoal;
     } else if (selectedTimeType === TimeType.Monthly) {
-      return dataGoalData.monthlyGoal;
+      return dataGoalData?.monthlyGoal;
     } else {
-      return dataGoalData.dailyGoal;
+      return dataGoalData?.dailyGoal;
     }
   };
 
@@ -122,18 +122,18 @@ export default function Home() {
   );
 
   const onRenderFill = () => {
-    const goalTargetPercentage = (
-      (actualIntake / targetIntake()) *
-      100
-    ).toFixed(0);
+    const goalTargetPercentage =
+      actualIntake && targetIntake()
+        ? ((actualIntake / targetIntake()) * 100).toFixed(0)
+        : 0;
 
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text style={{ color: "#000", fontSize: 48, fontWeight: "bold" }}>
-          {goalTargetPercentage}%
+          {`${goalTargetPercentage}%`}
         </Text>
         <Text style={{ color: "#444", fontSize: 16, fontWeight: "bold" }}>
-          {actualIntake} / {targetIntake()} ml
+          {`${actualIntake} / ${targetIntake()} ml`}
         </Text>
       </View>
     );
@@ -282,15 +282,3 @@ export default function Home() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: "grey",
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: "center",
-  },
-});

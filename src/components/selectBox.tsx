@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 type Props = {
   isSelected: boolean;
@@ -18,17 +18,11 @@ export const SelectBox: React.FC<Props> = ({ isSelected, label, onPress }) => {
       }}
     >
       <View
-        style={{
-          alignItems: "center",
-          width: 20,
-          height: 20,
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: "#000",
-          justifyContent: "center",
-          backgroundColor: isSelected ? "#000" : "#fff",
-        }}
-      ></View>
+        style={[
+          styles.selectedArea,
+          isSelected ? styles.selectedContainer : styles.unselectedContainer,
+        ]}
+      />
       <Text
         style={{
           color: "#000",
@@ -42,3 +36,21 @@ export const SelectBox: React.FC<Props> = ({ isSelected, label, onPress }) => {
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  selectedArea: {
+    alignItems: "center",
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#000",
+    justifyContent: "center",
+  },
+  selectedContainer: {
+    backgroundColor: "#000",
+  },
+  unselectedContainer: {
+    backgroundColor: "#fff",
+  },
+});

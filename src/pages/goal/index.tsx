@@ -7,10 +7,10 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AnimatedCircular, SaveButton } from "../../components";
 import { updateGoal } from "../../services/goal";
-import { useNavigation } from "@react-navigation/native";
 
 export default function Goal() {
   const queryClient = useQueryClient();
@@ -23,6 +23,9 @@ export default function Goal() {
   const { mutate: updateGoalMutation } = useMutation(updateGoal, {
     onSuccess: () => {
       queryClient.invalidateQueries(["goal"]);
+    },
+    onError: () => {
+      Alert.alert("Error", "Something went wrong");
     },
   });
 
@@ -46,10 +49,9 @@ export default function Goal() {
   };
 
   const onChangeText = (text: string) => {
-    if (text === "") {
-      setValue(parseInt("0"));
-    }
-    setValue(parseInt(text));
+    const value = text === "" ? 0 : parseInt(text);
+
+    setValue(value);
   };
 
   const onSave = async () => {
@@ -59,7 +61,7 @@ export default function Goal() {
       monthlyGoal: value * 30,
       weeklyGoal: value * 7,
     };
-    await updateGoalMutation(data);
+    updateGoalMutation(data);
 
     showAlert();
   };
