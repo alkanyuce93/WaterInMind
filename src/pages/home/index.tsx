@@ -1,8 +1,9 @@
 import React, { useMemo, useRef } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import moment from "moment";
-import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   RecyclerListView,
   DataProvider,
@@ -17,15 +18,14 @@ import {
   SelectBox,
 } from "../../components";
 import { goalPageIcon } from "../../../assets";
-import { TimeType, IntakeType, GoalType } from "../../interface/enum";
+import { IntakeType, GoalType } from "../../interface/common";
+import { TimeType } from "../../interface/enum";
 import { CreateModal, UpdateModal } from "../../modals";
 import {
   createIntake,
   deleteIntake,
   updateIntake,
 } from "../../services/intake";
-import { useNavigation } from "@react-navigation/native";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
   const { data, isLoading, refetch } = useQuery(["intakes"], getIntakes);
@@ -108,11 +108,11 @@ export default function Home() {
 
   const targetIntake = (): number => {
     if (selectedTimeType === TimeType.Weekly) {
-      return dataGoalData.weeklyGoal;
+      return dataGoalData?.weeklyGoal;
     } else if (selectedTimeType === TimeType.Monthly) {
-      return dataGoalData.monthlyGoal;
+      return dataGoalData?.monthlyGoal;
     } else {
-      return dataGoalData.dailyGoal;
+      return dataGoalData?.dailyGoal;
     }
   };
 

@@ -1,10 +1,9 @@
 import React, { AppRegistry } from "react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { Home, Goal, SplashScreen } from "./src/pages";
-
-import { NavigationContainer } from "@react-navigation/native";
 
 AppRegistry.registerComponent("WaterInMind", () => App);
 

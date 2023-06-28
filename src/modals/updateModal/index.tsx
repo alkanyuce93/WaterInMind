@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Modal, Button, TextInput, StyleSheet } from "react-native";
-import { IntakeType } from "../../interface/enum";
+import { IntakeType } from "../../interface/common";
 
 type Props = {
   item: IntakeType;

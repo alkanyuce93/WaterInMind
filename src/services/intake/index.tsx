@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IntakeType } from "../../interface/enum";
+import { IntakeType } from "../../interface/common";
 
 const apiUrl = "https://645ce732e01ac6105896bbce.mockapi.io";
 
