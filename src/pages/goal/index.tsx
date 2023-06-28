@@ -24,6 +24,9 @@ export default function Goal() {
     onSuccess: () => {
       queryClient.invalidateQueries(["goal"]);
     },
+    onError: () => {
+      Alert.alert("Error", "Something went wrong");
+    },
   });
 
   const showAlert = () => {
@@ -46,10 +49,9 @@ export default function Goal() {
   };
 
   const onChangeText = (text: string) => {
-    if (text === "") {
-      setValue(parseInt("0"));
-    }
-    setValue(parseInt(text));
+    const value = text === "" ? 0 : parseInt(text);
+
+    setValue(value);
   };
 
   const onSave = async () => {
@@ -59,7 +61,7 @@ export default function Goal() {
       monthlyGoal: value * 30,
       weeklyGoal: value * 7,
     };
-    await updateGoalMutation(data);
+    updateGoalMutation(data);
 
     showAlert();
   };

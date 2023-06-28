@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import moment from "moment";
 
@@ -23,17 +23,7 @@ export const ListInfoCard: React.FC<Props> = ({
   return (
     <TouchableOpacity
       onLongPress={() => onLongPress(id)}
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#fff",
-        borderRadius: 10,
-        marginBottom: 10,
-        borderColor: "#9B9B9B",
-        borderWidth: 1,
-        marginHorizontal: 15,
-      }}
+      style={styles.cardStyle}
     >
       <View
         style={{
@@ -69,3 +59,17 @@ export const ListInfoCard: React.FC<Props> = ({
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  cardStyle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginBottom: 10,
+    borderColor: "#9B9B9B",
+    borderWidth: 1,
+    marginHorizontal: 15,
+  },
+});

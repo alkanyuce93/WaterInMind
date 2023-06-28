@@ -122,18 +122,18 @@ export default function Home() {
   );
 
   const onRenderFill = () => {
-    const goalTargetPercentage = (
-      (actualIntake / targetIntake()) *
-      100
-    ).toFixed(0);
+    const goalTargetPercentage =
+      actualIntake && targetIntake()
+        ? ((actualIntake / targetIntake()) * 100).toFixed(0)
+        : 0;
 
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text style={{ color: "#000", fontSize: 48, fontWeight: "bold" }}>
-          {goalTargetPercentage}%
+          {`${goalTargetPercentage}%`}
         </Text>
         <Text style={{ color: "#444", fontSize: 16, fontWeight: "bold" }}>
-          {actualIntake} / {targetIntake()} ml
+          {`${actualIntake} / ${targetIntake()} ml`}
         </Text>
       </View>
     );
@@ -282,15 +282,3 @@ export default function Home() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: "grey",
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: "center",
-  },
-});
