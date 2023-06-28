@@ -17,7 +17,7 @@ import {
   SelectBox,
 } from "../../components";
 import { goalPageIcon } from "../../../assets";
-import { TimeType, UsersType } from "../../interface/enum";
+import { TimeType, IntakeType, GoalType } from "../../interface/enum";
 import { CreateModal, UpdateModal } from "../../modals";
 import {
   createIntake,
@@ -45,7 +45,7 @@ export default function Home() {
     React.useState<TimeType | null>(null);
   const [openModal, setOpenModal] = React.useState(false);
   const [openCreateModal, setOpenCreateModal] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState<UsersType | null>(
+  const [selectedItem, setSelectedItem] = React.useState<IntakeType | null>(
     null
   );
   const navigation = useNavigation();
@@ -57,7 +57,8 @@ export default function Home() {
     },
   });
 
-  const dataUsers = data?.data as UsersType[];
+  const dataIntake = data?.data as IntakeType[];
+  const dataGoalData = dataGoal?.data as GoalType;
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["100%", "100%"], []);
 
@@ -77,18 +78,18 @@ export default function Home() {
     />
   );
 
-  const todayData = dataUsers?.filter(
+  const todayData = dataIntake?.filter(
     (item) =>
       moment(item.createdAt).format("DD/MM/YYYY") ===
       moment().format("DD/MM/YYYY")
   );
 
-  const thisWeekData = dataUsers?.filter(
+  const thisWeekData = dataIntake?.filter(
     (item) =>
       moment(item.createdAt).format("WW/YYYY") === moment().format("WW/YYYY")
   );
 
-  const thisMonthData = dataUsers?.filter(
+  const thisMonthData = dataIntake?.filter(
     (item) =>
       moment(item.createdAt).format("MM/YYYY") === moment().format("MM/YYYY")
   );
@@ -101,20 +102,30 @@ export default function Home() {
     } else if (selectedTimeType === TimeType.Monthly) {
       return thisMonthData;
     } else {
-      return dataUsers;
+      return dataIntake;
     }
   };
 
-  const targetIntake = dataGoal?.data?.dailyGoal as number;
+  const targetIntake = (): number => {
+    if (selectedTimeType === TimeType.Weekly) {
+      return dataGoalData.weeklyGoal;
+    } else if (selectedTimeType === TimeType.Monthly) {
+      return dataGoalData.monthlyGoal;
+    } else {
+      return dataGoalData.dailyGoal;
+    }
+  };
+
   const actualIntake = todayData?.reduce(
     (acc, item) => acc + parseInt(item?.amount as unknown as string),
     0
   );
 
   const onRenderFill = () => {
-    const goalTargetPercentage = ((actualIntake / targetIntake) * 100).toFixed(
-      0
-    );
+    const goalTargetPercentage = (
+      (actualIntake / targetIntake()) *
+      100
+    ).toFixed(0);
 
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -122,7 +133,7 @@ export default function Home() {
           {goalTargetPercentage}%
         </Text>
         <Text style={{ color: "#444", fontSize: 16, fontWeight: "bold" }}>
-          {actualIntake} / {targetIntake} ml
+          {actualIntake} / {targetIntake()} ml
         </Text>
       </View>
     );
@@ -133,13 +144,13 @@ export default function Home() {
       amount: intake,
       unit: "ml",
       createdAt: new Date(),
-    } as unknown as UsersType);
+    } as unknown as IntakeType);
     refetch();
     setOpenCreateModal(false);
   };
 
   const onLongPress = (id: string) => {
-    const selectedItem = dataUsers?.find((item) => item.id === id);
+    const selectedItem = dataIntake?.find((item) => item.id === id);
     setSelectedItem(selectedItem);
     setOpenModal(true);
   };
@@ -180,7 +191,7 @@ export default function Home() {
           <View style={{ alignItems: "center" }}>
             <AnimatedCircular
               actualIntake={actualIntake}
-              targetIntake={targetIntake}
+              targetIntake={targetIntake()}
               onRenderFill={onRenderFill}
             />
           </View>
