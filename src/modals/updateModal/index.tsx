@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, Modal, Button, TextInput, StyleSheet } from "react-native";
-import { UsersType } from "../../interface/enum";
+import { IntakeType } from "../../interface/enum";
 
 type Props = {
-  item: UsersType;
+  item: IntakeType;
   isVisible: boolean;
   onClose: () => void;
   onSave: (text: string) => void;

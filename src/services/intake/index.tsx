@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UsersType } from "../../interface/enum";
+import { IntakeType } from "../../interface/enum";
 
 const apiUrl = "https://645ce732e01ac6105896bbce.mockapi.io";
 
@@ -13,12 +13,12 @@ export const getIntake = async (id: string) => {
   return response;
 };
 
-export const createIntake = async (data: UsersType) => {
+export const createIntake = async (data: IntakeType) => {
   const response = await axios.post(`${apiUrl}/intake`, data);
   return response;
 };
 
-export const updateIntake = async (data: UsersType) => {
+export const updateIntake = async (data: IntakeType) => {
   const response = await axios.put(`${apiUrl}/intake/${data.id}`, data);
   return response;
 };
