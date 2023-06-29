@@ -54,14 +54,18 @@ export default function Goal() {
     setValue(value);
   };
 
+  const dailyGoal = value === 0 ? 2000 : value;
+  const monthlyGoal = dailyGoal * 30;
+  const weeklyGoal = dailyGoal * 7;
+
   const onSave = async () => {
     const data = {
       id: "1",
-      dailyGoal: value,
-      monthlyGoal: value * 30,
-      weeklyGoal: value * 7,
+      dailyGoal: dailyGoal,
+      monthlyGoal: monthlyGoal,
+      weeklyGoal: weeklyGoal,
     };
-    updateGoalMutation(data);
+    await updateGoalMutation(data);
 
     showAlert();
   };
