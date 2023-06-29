@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
+import { happyFace, sadFace, waterDrop } from "../../assets";
 
 type Props = {
   actualIntake: number;
@@ -42,11 +43,23 @@ export const AnimatedCircular: React.FC<Props> = ({
         fill={fill}
         tintColor="#00e0ff"
         backgroundColor="#3d5875"
-        rotation={0}
+        rotation={-120}
         lineCap="round"
+        arcSweepAngle={240}
       >
         {onRenderFill}
       </AnimatedCircularProgress>
+      <View
+        style={{
+          justifyContent: "space-between",
+          flexDirection: "row",
+          marginTop: -50,
+          marginHorizontal: 30,
+        }}
+      >
+        <Image style={{ width: 32, height: 32 }} source={sadFace} />
+        <Image style={{ width: 32, height: 32 }} source={happyFace} />
+      </View>
     </View>
   );
 };

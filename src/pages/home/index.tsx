@@ -209,6 +209,7 @@ export default function Home() {
               alignItems: "center",
               flexDirection: "row",
               justifyContent: "space-around",
+              marginHorizontal: 20,
             }}
           >
             {renderSelectBox(TimeType.Daily, "Daily")}
