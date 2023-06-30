@@ -26,6 +26,7 @@ export default function Goal() {
     },
     onError: () => {
       Alert.alert("Error", "Something went wrong");
+      console.log("error", Error);
     },
   });
 
