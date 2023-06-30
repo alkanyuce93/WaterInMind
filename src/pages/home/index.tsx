@@ -40,10 +40,18 @@ export default function Home() {
     onSuccess: () => {
       queryClient.invalidateQueries(["intakes"]);
     },
+    onError: () => {
+      Alert.alert("Error", "Something went wrong");
+      console.log("error", Error);
+    },
   });
   const { mutate: updateIntakeMutation } = useMutation(updateIntake, {
     onSuccess: () => {
       queryClient.invalidateQueries(["intakes"]);
+    },
+    onError: () => {
+      Alert.alert("Error", "Something went wrong");
+      console.log("error", Error);
     },
   });
   const { data: dataGoal } = useQuery(["goal"], () => getGoals("1"));
@@ -61,6 +69,10 @@ export default function Home() {
   const { mutate } = useMutation(createIntake, {
     onSuccess: () => {
       queryClient.invalidateQueries(["intakes"]);
+    },
+    onError: () => {
+      Alert.alert("Error", "Something went wrong");
+      console.log("error", Error);
     },
   });
 
