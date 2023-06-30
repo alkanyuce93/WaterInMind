@@ -1,5 +1,12 @@
-import React, { useMemo, useRef } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useMemo, useRef } from "react";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import moment from "moment";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
@@ -78,7 +85,7 @@ export default function Home() {
     />
   );
 
-  const todayData = dataIntake?.filter(
+  const todayData = dataIntake?.filter?.(
     (item) =>
       moment(item.createdAt).format("DD/MM/YYYY") ===
       moment().format("DD/MM/YYYY")
@@ -94,8 +101,24 @@ export default function Home() {
       moment(item.createdAt).format("MM/YYYY") === moment().format("MM/YYYY")
   );
 
+  const showAlert = () => {
+    Alert.alert("You haven't drunk water today. Please drink water.", "", [
+      { text: "OK", onPress: () => setOpenCreateModal(true) },
+    ]);
+  };
+
+  useEffect(() => {
+    if (todayData?.length === 0) {
+      showAlert();
+    }
+  }, [selectedTimeType]);
+
   const selectedDataFunction = () => {
-    if (selectedTimeType === TimeType.Daily) {
+    if (
+      selectedTimeType === TimeType.Daily &&
+      todayData &&
+      todayData.length > 0
+    ) {
       return todayData;
     } else if (selectedTimeType === TimeType.Weekly) {
       return thisWeekData;
@@ -120,6 +143,12 @@ export default function Home() {
     (acc, item) => acc + parseInt(item?.amount as unknown as string),
     0
   );
+
+  useEffect(() => {
+    if (actualIntake === 0) {
+      setOpenCreateModal(true);
+    }
+  }, [actualIntake]);
 
   const onRenderFill = () => {
     const goalTargetPercentage =
