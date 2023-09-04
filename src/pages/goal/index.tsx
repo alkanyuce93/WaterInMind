@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
   fillSubText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "blue",
+    color: "#6488ea",
   },
 });

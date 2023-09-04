@@ -54,7 +54,7 @@ export const UpdateModal: React.FC<Props> = ({
           ) : (
             <>
               <Button
-                color={"blue"}
+                color={"#6488ea"}
                 title="Update"
                 onPress={() => {
                   setIsUpdate(true);
