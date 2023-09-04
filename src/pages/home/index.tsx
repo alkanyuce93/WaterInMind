@@ -80,6 +80,7 @@ export default function Home() {
   const dataGoalData = dataGoal?.data as GoalType;
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["100%", "100%"], []);
+  const [dataIntakeList, setDataIntakeList] = React.useState<IntakeType[]>();
 
   const selectedButton = (type: TimeType) => {
     if (selectedTimeType === type) {
@@ -123,7 +124,7 @@ export default function Home() {
     if (todayData?.length === 0) {
       showAlert();
     }
-  }, [selectedTimeType]);
+  }, []);
 
   const selectedDataFunction = () => {
     if (
@@ -151,21 +152,42 @@ export default function Home() {
     }
   };
 
-  const actualIntake = todayData?.reduce(
-    (acc, item) => acc + parseInt(item?.amount as unknown as string),
-    0
-  );
+  const actualIntake = () => {
+    if (selectedTimeType === TimeType.Weekly) {
+      return thisWeekData?.reduce(
+        (total, item) => total + parseInt(item.amount as unknown as string),
+        0
+      );
+    } else if (selectedTimeType === TimeType.Monthly) {
+      return thisMonthData?.reduce(
+        (total, item) => total + parseInt(item.amount as unknown as string),
+        0
+      );
+    } else {
+      return todayData?.reduce(
+        (total, item) => total + parseInt(item.amount as unknown as string),
+        0
+      );
+    }
+  };
 
   useEffect(() => {
-    if (actualIntake === 0) {
+    return setDataIntakeList(actualIntake() as unknown as IntakeType[]);
+  }, [actualIntake]);
+
+  useEffect(() => {
+    if (actualIntake() === 0) {
       setOpenCreateModal(true);
     }
   }, [actualIntake]);
 
   const onRenderFill = () => {
     const goalTargetPercentage =
-      actualIntake && targetIntake()
-        ? ((actualIntake / targetIntake()) * 100).toFixed(0)
+      dataIntakeList && targetIntake()
+        ? (
+            ((dataIntakeList as unknown as number) / targetIntake()) *
+            100
+          ).toFixed(0)
         : 0;
 
     return (
@@ -174,7 +196,7 @@ export default function Home() {
           {`${goalTargetPercentage}%`}
         </Text>
         <Text style={{ color: "#444", fontSize: 16, fontWeight: "bold" }}>
-          {`${actualIntake} / ${targetIntake()} ml`}
+          {`${dataIntakeList} / ${targetIntake()} ml`}
         </Text>
       </View>
     );
@@ -231,7 +253,7 @@ export default function Home() {
           </TouchableOpacity>
           <View style={{ alignItems: "center" }}>
             <AnimatedCircular
-              actualIntake={actualIntake}
+              actualIntake={actualIntake()}
               targetIntake={targetIntake()}
               onRenderFill={onRenderFill}
             />
