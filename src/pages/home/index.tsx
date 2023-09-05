@@ -71,7 +71,7 @@ export default function Home() {
       queryClient.invalidateQueries(["intakes"]);
     },
     onError: () => {
-      Alert.alert("Error", "Something went wrong");
+      Alert.alert("Error", "Something went wrong, try again");
       console.log("error", Error);
     },
   });
