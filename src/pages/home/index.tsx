@@ -35,7 +35,8 @@ import {
 } from "../../services/intake";
 
 export default function Home() {
-  const { data, isLoading, refetch } = useQuery(["intakes"], getIntakes);
+  const { data } = useQuery(["intakes"], getIntakes);
+  const { isLoading, refetch } = useQuery(["intakes"], getIntakes);
   const { mutate: deleteIntakeMutation } = useMutation(deleteIntake, {
     onSuccess: () => {
       queryClient.invalidateQueries(["intakes"]);
